@@ -1,0 +1,33 @@
+version: '3.5'
+
+services:
+  demo.web:
+    image: demo.web
+    build:
+      context: .
+      dockerfile: Demo.Web\Dockerfile
+    hostname: webapp
+    container_name: webapp
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "80"
+    networks:
+      - app-network
+
+  rabbitmq:
+    image: rabbitmq
+    hostname: rabbitmq
+    container_name: rabbitmq
+    volumes:
+      - C:\rabbitmq\db:c:/RabbitMQ-data/db
+      - C:\rabbitmq\log:c:/RabbitMQ-data/log
+    ports:
+      - "15672:15672"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    name: app-network
+    driver: nat
