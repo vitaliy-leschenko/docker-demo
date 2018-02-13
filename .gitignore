@@ -259,3 +259,7 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/src/volumes/rabbitmq-db
+!/src/volumes/rabbitmq-db/readme.txt
+/src/volumes/rabbitmq-log
+!/src/volumes/rabbitmq-log/readme.txt

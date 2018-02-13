@@ -23,8 +23,8 @@ services:
     hostname: rabbitmq
     container_name: rabbitmq
     volumes:
-      - C:\rabbitmq\db:c:/RabbitMQ-data/db
-      - C:\rabbitmq\log:c:/RabbitMQ-data/log
+      - ./volumes/rabbitmq-db:c:/RabbitMQ-data/db:rw
+      - ./volumes/rabbitmq-log:c:/RabbitMQ-data/log:rw
     ports:
       - "15672:15672"
     networks:
