@@ -17,6 +17,9 @@ services:
 
   rabbitmq:
     image: rabbitmq
+    build:
+      context: .
+      dockerfile: RabbitMQ\Dockerfile
     hostname: rabbitmq
     container_name: rabbitmq
     volumes:
