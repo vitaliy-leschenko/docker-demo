@@ -16,6 +16,19 @@ services:
       - "80"
     networks:
       - app-network
+  worker:
+    image: demo.worker
+    build:
+      context: .
+      dockerfile: Demo.Worker\Dockerfile
+    hostname: worker
+    container_name: demo.worker
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Services__RabbitMQ=rabbitmq
+      - Database__ConnectionString=Server=db;Database=demodb;User Id=sa;Password=nRhtG1c9;
+    networks:
+      - app-network
   rabbitmq:
     image: rabbitmq
     build:
@@ -51,3 +64,4 @@ networks:
   app-network:
     name: app-network
     driver: nat
+

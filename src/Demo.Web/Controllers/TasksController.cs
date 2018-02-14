@@ -84,7 +84,7 @@ namespace Demo.Web.Controllers
                 {
                     using (var channel = connection.CreateModel())
                     {
-                        channel.QueueDeclare(queue: "tasks", durable: false, exclusive: false, autoDelete: false, arguments: null);
+                        channel.QueueDeclare(queue: "tasks", durable: true, exclusive: false, autoDelete: false, arguments: null);
 
                         var message = new JObject(new JProperty("value", task.Id)).ToString();
                         var body = Encoding.UTF8.GetBytes(message);
