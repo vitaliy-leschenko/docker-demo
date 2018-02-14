@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Demo.Database;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace Demo.Web
 {
@@ -18,14 +21,28 @@ namespace Demo.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            var connection = Configuration["Database:ConnectionString"];
+            services.AddDbContext<DemoContext>(options =>
+            {
+                options.UseSqlServer(connection);
+            });
+
+            var serviceProvider = services.BuildServiceProvider();
+            services.AddSingleton<IServiceProvider>(serviceProvider);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider provider)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+
+            using (var db = provider.GetService<DemoContext>())
+            {
+                db.Database.Migrate();
             }
 
             app.UseMvc();

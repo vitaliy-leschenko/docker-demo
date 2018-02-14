@@ -1,27 +1,28 @@
 version: '3.5'
 
 services:
-  demo.web:
+  api:
     image: demo.web
     build:
       context: .
       dockerfile: Demo.Web\Dockerfile
     hostname: webapp
-    container_name: webapp
+    container_name: demo.web
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - Services__RabbitMQ=rabbitmq
+      - Database__ConnectionString=Server=db;Database=demodb;User Id=sa;Password=nRhtG1c9;
     ports:
       - "80"
     networks:
       - app-network
-
   rabbitmq:
     image: rabbitmq
     build:
       context: .
       dockerfile: RabbitMQ\Dockerfile
     hostname: rabbitmq
-    container_name: rabbitmq
+    container_name: demo.rabbitmq
     volumes:
       - ./volumes/rabbitmq-db:c:/RabbitMQ-data/db:rw
       - ./volumes/rabbitmq-log:c:/RabbitMQ-data/log:rw
@@ -29,7 +30,23 @@ services:
       - "15672:15672"
     networks:
       - app-network
-
+  db:
+    image: mssql-server
+    build:
+      context: .
+      dockerfile: MSSQL\Dockerfile
+    hostname: db
+    container_name: demo.db
+    environment:
+      - ACCEPT_EULA=Y
+      - sa_password=nRhtG1c9
+      - attach_dbs=[{'dbName':'demodb','dbFiles':['C:\\data\\demodb.mdf', 'C:\\data\\demodb_log.ldf']}]
+    volumes:
+      - ./volumes/mssql:c:/data:rw
+    ports:
+      - "1433:1433"
+    networks:
+      - app-network
 networks:
   app-network:
     name: app-network

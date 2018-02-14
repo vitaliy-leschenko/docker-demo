@@ -263,3 +263,5 @@ __pycache__/
 !/src/volumes/rabbitmq-db/readme.txt
 /src/volumes/rabbitmq-log
 !/src/volumes/rabbitmq-log/readme.txt
+/src/volumes/mssql
+!/src/volumes/mssql/readme.txt

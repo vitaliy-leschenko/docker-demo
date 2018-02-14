@@ -1,11 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Web", "Demo.Web\Demo.Web.csproj", "{B8546DFD-F84E-42F9-8578-98F470553EE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Web", "Demo.Web\Demo.Web.csproj", "{B8546DFD-F84E-42F9-8578-98F470553EE2}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{5D0DE397-D699-4D8E-BB4F-BBA8EE48463E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Database", "Demo.Database\Demo.Database.csproj", "{5C90F264-23AB-45E9-AE81-AFB19AFA7E22}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSSQL", "MSSQL", "{335226A0-D192-432F-A0B6-C2BE5E386AA8}"
+	ProjectSection(SolutionItems) = preProject
+		MSSQL\Dockerfile = MSSQL\Dockerfile
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RabbitMQ", "RabbitMQ", "{0F6DF128-76F1-424D-BA7C-75B88E7E523B}"
+	ProjectSection(SolutionItems) = preProject
+		RabbitMQ\Dockerfile = RabbitMQ\Dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +33,10 @@ Global
 		{5D0DE397-D699-4D8E-BB4F-BBA8EE48463E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D0DE397-D699-4D8E-BB4F-BBA8EE48463E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D0DE397-D699-4D8E-BB4F-BBA8EE48463E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C90F264-23AB-45E9-AE81-AFB19AFA7E22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C90F264-23AB-45E9-AE81-AFB19AFA7E22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C90F264-23AB-45E9-AE81-AFB19AFA7E22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C90F264-23AB-45E9-AE81-AFB19AFA7E22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
