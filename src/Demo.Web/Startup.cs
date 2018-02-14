@@ -40,11 +40,6 @@ namespace Demo.Web
                 app.UseDeveloperExceptionPage();
             }
 
-            using (var db = provider.GetService<DemoContext>())
-            {
-                db.Database.Migrate();
-            }
-
             app.UseMvc();
         }
     }

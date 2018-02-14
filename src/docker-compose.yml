@@ -6,36 +6,49 @@ services:
     build:
       context: .
       dockerfile: Demo.Web\Dockerfile
-    hostname: webapp
     container_name: demo.web
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - Services__RabbitMQ=rabbitmq
+      - Services__RabbitMQ=queue
       - Database__ConnectionString=Server=db;Database=demodb;User Id=sa;Password=nRhtG1c9;
     ports:
       - "80"
     networks:
       - app-network
+    depends_on:
+      - "db"
+      - "queue"
+    #command: db:1433 queue:5672
   worker:
     image: demo.worker
     build:
       context: .
       dockerfile: Demo.Worker\Dockerfile
-    hostname: worker
     container_name: demo.worker
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - Services__RabbitMQ=rabbitmq
+      - Services__RabbitMQ=queue
       - Database__ConnectionString=Server=db;Database=demodb;User Id=sa;Password=nRhtG1c9;
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     networks:
       - app-network
-  rabbitmq:
+    depends_on:
+      - "db"
+      - "queue"
+    #command: db:1433 queue:5672
+  queue:
     image: rabbitmq
     build:
       context: .
       dockerfile: RabbitMQ\Dockerfile
-    hostname: rabbitmq
-    container_name: demo.rabbitmq
+    hostname: queue
+    container_name: demo.queue
     volumes:
       - ./volumes/rabbitmq-db:c:/RabbitMQ-data/db:rw
       - ./volumes/rabbitmq-log:c:/RabbitMQ-data/log:rw
