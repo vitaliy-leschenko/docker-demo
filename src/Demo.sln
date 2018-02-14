@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2026
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Web", "Demo.Web\Demo.Web.csproj", "{B8546DFD-F84E-42F9-8578-98F470553EE2}"
 EndProject
@@ -11,15 +11,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Database", "Demo.Datab
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSSQL", "MSSQL", "{335226A0-D192-432F-A0B6-C2BE5E386AA8}"
 	ProjectSection(SolutionItems) = preProject
-		MSSQL\Dockerfile = MSSQL\Dockerfile
+		Prerequisites\MSSQL\Dockerfile = Prerequisites\MSSQL\Dockerfile
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RabbitMQ", "RabbitMQ", "{0F6DF128-76F1-424D-BA7C-75B88E7E523B}"
 	ProjectSection(SolutionItems) = preProject
-		RabbitMQ\Dockerfile = RabbitMQ\Dockerfile
+		Prerequisites\RabbitMQ\Dockerfile = Prerequisites\RabbitMQ\Dockerfile
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Worker", "Demo.Worker\Demo.Worker.csproj", "{B6913EEC-6DB5-4805-8751-498D73FDAFA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Demo.Worker", "Demo.Worker\Demo.Worker.csproj", "{B6913EEC-6DB5-4805-8751-498D73FDAFA0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Prerequisites", "Prerequisites", "{2879AB37-B56B-4BCF-AFBC-E8C7583AA7EB}"
+	ProjectSection(SolutionItems) = preProject
+		Prerequisites\prepare.ps1 = Prerequisites\prepare.ps1
+		test.ps1 = test.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +52,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{335226A0-D192-432F-A0B6-C2BE5E386AA8} = {2879AB37-B56B-4BCF-AFBC-E8C7583AA7EB}
+		{0F6DF128-76F1-424D-BA7C-75B88E7E523B} = {2879AB37-B56B-4BCF-AFBC-E8C7583AA7EB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2A06430B-5AF0-4DAE-B176-436BFE998599}

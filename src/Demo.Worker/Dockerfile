@@ -3,10 +3,8 @@ WORKDIR /app
 
 FROM microsoft/dotnet:2.0-sdk-nanoserver-1709 AS build
 WORKDIR /src
-COPY *.sln ./
-COPY Demo.Worker/Demo.Worker.csproj Demo.Worker/
-RUN dotnet restore
 COPY . .
+RUN dotnet restore Demo.sln
 WORKDIR /src/Demo.Worker
 RUN dotnet build -c Release -o /app
 

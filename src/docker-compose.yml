@@ -2,74 +2,25 @@ version: '3.5'
 
 services:
   api:
-    image: demo.web
+    image: demo-api
     build:
       context: .
       dockerfile: Demo.Web\Dockerfile
-    container_name: demo.web
+    container_name: demo-api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - Services__RabbitMQ=queue
-      - Database__ConnectionString=Server=db;Database=demodb;User Id=sa;Password=nRhtG1c9;
+      - Services__RabbitMQ=rabbitmq
+      - Database__ConnectionString=Server=mssql;Database=demodb;User Id=sa;Password=nRhtG1c9;
     ports:
       - "80"
-    networks:
-      - app-network
     restart: on-failure
-    depends_on:
-      - "db"
-      - "queue"
   worker:
-    image: demo.worker
+    image: demo-worker
     build:
       context: .
       dockerfile: Demo.Worker\Dockerfile
-    container_name: demo.worker
+    container_name: demo-worker
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - Services__RabbitMQ=queue
-      - Database__ConnectionString=Server=db;Database=demodb;User Id=sa;Password=nRhtG1c9;
-    networks:
-      - app-network
+      - Services__RabbitMQ=rabbitmq
+      - Database__ConnectionString=Server=mssql;Database=demodb;User Id=sa;Password=nRhtG1c9;
     restart: on-failure
-    depends_on:
-      - "db"
-      - "queue"
-  queue:
-    image: rabbitmq
-    build:
-      context: .
-      dockerfile: RabbitMQ\Dockerfile
-    hostname: queue
-    container_name: demo.queue
-    volumes:
-      - ./volumes/rabbitmq-db:c:/RabbitMQ-data/db:rw
-      - ./volumes/rabbitmq-log:c:/RabbitMQ-data/log:rw
-    ports:
-      - "15672:15672"
-    restart: on-failure
-    networks:
-      - app-network
-  db:
-    image: mssql-server
-    build:
-      context: .
-      dockerfile: MSSQL\Dockerfile
-    hostname: db
-    container_name: demo.db
-    environment:
-      - ACCEPT_EULA=Y
-      - sa_password=nRhtG1c9
-      - attach_dbs=[{'dbName':'demodb','dbFiles':['C:\\data\\demodb.mdf', 'C:\\data\\demodb_log.ldf']}]
-    volumes:
-      - ./volumes/mssql:c:/data:rw
-    ports:
-      - "1433:1433"
-    restart: on-failure
-    networks:
-      - app-network
-networks:
-  app-network:
-    name: app-network
-    driver: nat
-
