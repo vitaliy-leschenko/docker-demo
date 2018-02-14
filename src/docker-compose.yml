@@ -15,10 +15,10 @@ services:
       - "80"
     networks:
       - app-network
+    restart: on-failure
     depends_on:
       - "db"
       - "queue"
-    #command: db:1433 queue:5672
   worker:
     image: demo.worker
     build:
@@ -29,19 +29,12 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - Services__RabbitMQ=queue
       - Database__ConnectionString=Server=db;Database=demodb;User Id=sa;Password=nRhtG1c9;
-    deploy:
-      replicas: 2
-      restart_policy:
-        condition: on-failure
-        delay: 5s
-        max_attempts: 3
-        window: 120s
     networks:
       - app-network
+    restart: on-failure
     depends_on:
       - "db"
       - "queue"
-    #command: db:1433 queue:5672
   queue:
     image: rabbitmq
     build:
@@ -54,6 +47,7 @@ services:
       - ./volumes/rabbitmq-log:c:/RabbitMQ-data/log:rw
     ports:
       - "15672:15672"
+    restart: on-failure
     networks:
       - app-network
   db:
@@ -71,6 +65,7 @@ services:
       - ./volumes/mssql:c:/data:rw
     ports:
       - "1433:1433"
+    restart: on-failure
     networks:
       - app-network
 networks:
