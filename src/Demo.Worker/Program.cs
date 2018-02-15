@@ -7,16 +7,20 @@ using RabbitMQ.Client.Events;
 using System;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Demo.Worker
 {
     class Program
     {
-        private static readonly AutoResetEvent closing = new AutoResetEvent(false);
+        private static volatile bool canceled = false;
 
         static void Main(string[] args)
+        {
+            MainAsync(args).Wait();
+        }
+
+        static async Task MainAsync(string[] args)
         {
             var builder = new ConfigurationBuilder();
             builder.SetBasePath(Environment.CurrentDirectory);
@@ -25,7 +29,7 @@ namespace Demo.Worker
 
             var config = builder.Build();
 
-            var factory = new ConnectionFactory() { HostName = config["Services:RabbitMQ"] };
+            var factory = new ConnectionFactory() { HostName = config["Services:RabbitMQ"], DispatchConsumersAsync = true };
             using (var connection = factory.CreateConnection())
             {
                 using (var channel = connection.CreateModel())
@@ -44,22 +48,26 @@ namespace Demo.Worker
 
                             await ProcessMessage(message);
 
-                            channel.BasicAck(ea.DeliveryTag, multiple: false);
                             Console.WriteLine(CurrentDate() + " [Success]");
+                            channel.BasicAck(ea.DeliveryTag, false);
                         }
                         catch (Exception ex)
                         {
-                            channel.BasicNack(ea.DeliveryTag, multiple: false, requeue: true);
-
                             Console.WriteLine(CurrentDate() + " [Fail]");
                             Console.WriteLine(ex);
+                            channel.BasicNack(ea.DeliveryTag, false, true);
+                            throw;
                         }
                     };
                     channel.BasicConsume(queue: "tasks", autoAck: false, consumer: consumer);
 
                     Console.WriteLine("Press Ctrl+C to exit.");
                     Console.CancelKeyPress += new ConsoleCancelEventHandler(OnExit);
-                    closing.WaitOne();
+                    while (true)
+                    {
+                        if (canceled) break;
+                        await Task.Delay(1000);
+                    }
                 }
             }
 
@@ -71,7 +79,7 @@ namespace Demo.Worker
 
         private static void OnExit(object sender, ConsoleCancelEventArgs e)
         {
-            closing.Set();
+            canceled = true;
         }
 
         private static async Task ProcessMessage(string message)
