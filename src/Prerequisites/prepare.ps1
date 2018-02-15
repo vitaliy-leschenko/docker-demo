@@ -17,7 +17,6 @@ $cid = (docker run -d `
            --name mssql-server `
            --hostname mssql `
            --volume "$PWD/volumes/mssql:c:/data" `
-           --publish 1433:1433/tcp `
            --env "ACCEPT_EULA=Y" `
            --env "sa_password=nRhtG1c9" `
            --env "attach_dbs=[{'dbName':'demodb','dbFiles':['C:\\data\\demodb.mdf', 'C:\\data\\demodb_log.ldf']}]" `
@@ -34,7 +33,6 @@ $cid = (docker run -d `
            --hostname rabbitmq `
            --volume "$PWD/volumes/rabbitmq-db:c:/RabbitMQ-data/db" `
            --volume "$PWD/volumes/rabbitmq-log:c:/RabbitMQ-data/log" `
-           --publish 15672:15672 `
            --restart on-failure `
            rabbitmq)
 
