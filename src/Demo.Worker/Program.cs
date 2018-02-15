@@ -5,15 +5,17 @@ using Newtonsoft.Json.Linq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Demo.Worker
 {
     class Program
     {
+        private static readonly AutoResetEvent closing = new AutoResetEvent(false);
+
         static void Main(string[] args)
         {
             var builder = new ConfigurationBuilder();
@@ -30,50 +32,46 @@ namespace Demo.Worker
                 {
                     channel.QueueDeclare(queue: "tasks", durable: true, exclusive: false, autoDelete: false, arguments: null);
 
-                    var consumer = new EventingBasicConsumer(channel);
-                    consumer.Received += (model, ea) =>
+                    var consumer = new AsyncEventingBasicConsumer(channel);
+                    consumer.Received += async (model, ea) =>
                     {
-                        Console.WriteLine("[Start: " + DateTime.UtcNow.ToString("yyyy:MM:dd HH:mm:ss:ffffzzz") + "]");
-                        var watch = new Stopwatch();
-                        watch.Start();
+                        Console.WriteLine(CurrentDate() + " [Start]");
 
                         try
                         {
                             var body = ea.Body;
                             var message = Encoding.UTF8.GetString(body);
 
-                            Console.WriteLine(message);
-                            ProcessMessage(message).Wait();
-                            channel.BasicAck(ea.DeliveryTag, multiple: false);
+                            await ProcessMessage(message);
 
-                            watch.Stop();
-                            Console.WriteLine("[Success]");
+                            channel.BasicAck(ea.DeliveryTag, multiple: false);
+                            Console.WriteLine(CurrentDate() + " [Success]");
                         }
                         catch (Exception ex)
                         {
-                            Console.WriteLine("[Fail]");
+                            channel.BasicNack(ea.DeliveryTag, multiple: false, requeue: true);
+
+                            Console.WriteLine(CurrentDate() + " [Fail]");
                             Console.WriteLine(ex);
-                            throw;
-                        }
-                        finally
-                        {
-                            watch.Stop();
-                            Console.WriteLine("[" + DateTime.UtcNow.ToString("yyyy:MM:dd HH:mm:ss:ffffzzz") + ", " + watch.ElapsedMilliseconds + "ms.]");
                         }
                     };
                     channel.BasicConsume(queue: "tasks", autoAck: false, consumer: consumer);
 
-                    Loop().Wait();
+                    Console.WriteLine("Press Ctrl+C to exit.");
+                    Console.CancelKeyPress += new ConsoleCancelEventHandler(OnExit);
+                    closing.WaitOne();
                 }
+            }
+
+            string CurrentDate()
+            {
+                return DateTime.UtcNow.ToString("yyyy:MM:dd HH:mm:ss:ffffzzz");
             }
         }
 
-        private static async Task Loop()
+        private static void OnExit(object sender, ConsoleCancelEventArgs e)
         {
-            while (true)
-            {
-                await Task.Delay(1000);
-            }
+            closing.Set();
         }
 
         private static async Task ProcessMessage(string message)
@@ -88,12 +86,13 @@ namespace Demo.Worker
                 {
                     task.Status = WorkerTaskStatus.Running;
 
-                    for (var t = 1; t <= 100; t++)
+                    for (var t = 0; t <= 100; t+=10)
                     {
                         task.Progress = t;
                         await db.SaveChangesAsync();
                     }
 
+                    task.Progress = 100;
                     task.Status = WorkerTaskStatus.Completed;
                     await db.SaveChangesAsync();
                 }

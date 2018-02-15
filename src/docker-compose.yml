@@ -20,7 +20,6 @@ services:
       dockerfile: Demo.Worker\Dockerfile
     container_name: demo-worker
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
       - Services__RabbitMQ=rabbitmq
       - Database__ConnectionString=Server=mssql;Database=demodb;User Id=sa;Password=nRhtG1c9;
     restart: on-failure
