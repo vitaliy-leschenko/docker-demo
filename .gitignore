@@ -17,9 +17,9 @@ bld/
 
 .vs/
 
-src/volumes/rabbitmq-db
-!src/volumes/rabbitmq-db/readme.txt
-src/volumes/rabbitmq-log
-!src/volumes/rabbitmq-log/readme.txt
-src/volumes/mssql
-!src/volumes/mssql/readme.txt
+volumes/rabbitmq-db
+!volumes/rabbitmq-db/readme.txt
+volumes/rabbitmq-log
+!volumes/rabbitmq-log/readme.txt
+volumes/mssql
+!volumes/mssql/readme.txt
