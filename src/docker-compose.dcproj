@@ -5,8 +5,8 @@
     <DockerTargetOS>Windows</DockerTargetOS>
     <ProjectGuid>5d0de397-d699-4d8e-bb4f-bba8ee48463e</ProjectGuid>
     <DockerLaunchBrowser>True</DockerLaunchBrowser>
-    <DockerServiceUrl>http://{ServiceIPAddress}/api/values</DockerServiceUrl>
-    <DockerServiceName>api</DockerServiceName>
+    <DockerServiceUrl>http://{ServiceIPAddress}/api/tasks</DockerServiceUrl>
+    <DockerServiceName>api,worker</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">
