@@ -89,15 +89,17 @@ namespace Demo.Worker
 
         private static async Task ProcessMessage(string message)
         {
+            var start = DateTimeOffset.UtcNow;
+
             var json = JObject.Parse(message);
             var id = json["value"].Value<int>();
-
             using (var db = new DemoContext())
             {
                 var task = await db.Tasks.Where(t => t.Id == id).FirstOrDefaultAsync();
                 if (task != null)
                 {
                     task.Status = WorkerTaskStatus.Running;
+                    task.Started = start;
 
                     for (var t = 0; t <= 100; t+=10)
                     {

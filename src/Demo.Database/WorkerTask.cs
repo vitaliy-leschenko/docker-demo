@@ -9,6 +9,7 @@ namespace Demo.Database
         public WorkerTaskStatus Status { get; set; }
         public int Progress { get; set; }
         public DateTimeOffset Created { get; set; }
+        public DateTimeOffset? Started { get; set; }
         public DateTimeOffset? Updated { get; set; }
     }
 }

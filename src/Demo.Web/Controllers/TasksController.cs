@@ -37,7 +37,8 @@ namespace Demo.Web.Controllers
                                 Status = (int)task.Status,
                                 Progress = task.Progress,
                                 Created = task.Created,
-                                Updated = task.Updated
+                                Updated = task.Updated,
+                                Started = task.Started
                             };
                 return await query.ToArrayAsync();
             }
@@ -58,7 +59,8 @@ namespace Demo.Web.Controllers
                                 Status = (int)task.Status,
                                 Progress = task.Progress,
                                 Created = task.Created,
-                                Updated = task.Updated
+                                Updated = task.Updated,
+                                Started = task.Started
                             };
                 return await query.FirstOrDefaultAsync();
             }
@@ -96,7 +98,8 @@ namespace Demo.Web.Controllers
                     Status = (int)task.Status,
                     Progress = task.Progress,
                     Created = task.Created,
-                    Updated = task.Updated
+                    Updated = task.Updated,
+                    Started = task.Started
                 };
             }
         }
@@ -115,7 +118,8 @@ namespace Demo.Web.Controllers
                     Status = WorkerTaskStatus.Pending,
                     Progress = 0,
                     Created = DateTimeOffset.UtcNow,
-                    Updated = null
+                    Updated = null,
+                    Started = null
                 };
 
                 db.Tasks.Add(task);
@@ -146,7 +150,8 @@ namespace Demo.Web.Controllers
                     Status = (int)task.Status,
                     Progress = task.Progress,
                     Created = task.Created,
-                    Updated = task.Updated
+                    Updated = task.Updated,
+                    Started = task.Started
                 };
             }
         }

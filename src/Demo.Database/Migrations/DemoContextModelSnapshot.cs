@@ -31,6 +31,8 @@ namespace Demo.Database.Migrations
 
                     b.Property<int>("Progress");
 
+                    b.Property<DateTimeOffset?>("Started");
+
                     b.Property<int>("Status");
 
                     b.Property<DateTimeOffset?>("Updated");
