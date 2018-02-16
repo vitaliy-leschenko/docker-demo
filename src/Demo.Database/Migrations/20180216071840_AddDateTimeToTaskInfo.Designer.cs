@@ -11,9 +11,10 @@ using System;
 namespace Demo.Database.Migrations
 {
     [DbContext(typeof(DemoContext))]
-    partial class DemoContextModelSnapshot : ModelSnapshot
+    [Migration("20180216071840_AddDateTimeToTaskInfo")]
+    partial class AddDateTimeToTaskInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,7 +34,7 @@ namespace Demo.Database.Migrations
 
                     b.Property<int>("Status");
 
-                    b.Property<DateTimeOffset?>("Updated");
+                    b.Property<DateTimeOffset>("Updated");
 
                     b.HasKey("Id");
 

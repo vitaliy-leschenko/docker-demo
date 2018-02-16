@@ -29,7 +29,12 @@ namespace Demo.Worker
 
             var config = builder.Build();
 
-            var factory = new ConnectionFactory() { HostName = config["Services:RabbitMQ"], DispatchConsumersAsync = true };
+            var factory = new ConnectionFactory()
+            {
+                HostName = config["Services:RabbitMQ"],
+                DispatchConsumersAsync = true,
+                AutomaticRecoveryEnabled = true
+            };
             using (var connection = factory.CreateConnection())
             {
                 using (var channel = connection.CreateModel())
@@ -97,10 +102,12 @@ namespace Demo.Worker
                     for (var t = 0; t <= 100; t+=10)
                     {
                         task.Progress = t;
+                        task.Updated = DateTimeOffset.UtcNow;
                         await db.SaveChangesAsync();
                     }
 
                     task.Progress = 100;
+                    task.Updated = DateTimeOffset.UtcNow;
                     task.Status = WorkerTaskStatus.Completed;
                     await db.SaveChangesAsync();
                 }

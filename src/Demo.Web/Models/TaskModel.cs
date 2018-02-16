@@ -1,4 +1,6 @@
-﻿namespace Demo.Web.Models
+﻿using System;
+
+namespace Demo.Web.Models
 {
     public class TaskModel
     {
@@ -6,5 +8,7 @@
         public string Comment { get; set; }
         public int Status { get; set; }
         public int Progress { get; set; }
+        public DateTimeOffset? Created { get; set; }
+        public DateTimeOffset? Updated { get; set; }
     }
 }

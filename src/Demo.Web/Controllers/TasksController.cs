@@ -35,7 +35,9 @@ namespace Demo.Web.Controllers
                                 Id = task.Id,
                                 Comment = task.Comment,
                                 Status = (int)task.Status,
-                                Progress = task.Progress
+                                Progress = task.Progress,
+                                Created = task.Created,
+                                Updated = task.Updated
                             };
                 return await query.ToArrayAsync();
             }
@@ -54,9 +56,48 @@ namespace Demo.Web.Controllers
                                 Id = task.Id,
                                 Comment = task.Comment,
                                 Status = (int)task.Status,
-                                Progress = task.Progress
+                                Progress = task.Progress,
+                                Created = task.Created,
+                                Updated = task.Updated
                             };
                 return await query.FirstOrDefaultAsync();
+            }
+        }
+
+        [HttpDelete]
+        [Route("api/tasks/{id}")]
+        public async Task Delete(int id)
+        {
+            using (var db = provider.GetService<DemoContext>())
+            {
+                var task = await db.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+                db.Tasks.Remove(task);
+                await db.SaveChangesAsync();
+            }
+        }
+
+        [HttpPut]
+        [Route("api/tasks/{id}")]
+        public async Task<TaskModel> Put(int id, [FromBody]TaskModel model)
+        {
+            using (var db = provider.GetService<DemoContext>())
+            {
+                var task = await db.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+                task.Comment = model.Comment;
+                task.Progress = model.Progress;
+                task.Status = (WorkerTaskStatus)model.Status;
+
+                await db.SaveChangesAsync();
+
+                return new TaskModel
+                {
+                    Id = task.Id,
+                    Comment = task.Comment,
+                    Status = (int)task.Status,
+                    Progress = task.Progress,
+                    Created = task.Created,
+                    Updated = task.Updated
+                };
             }
         }
 
@@ -72,7 +113,9 @@ namespace Demo.Web.Controllers
                 {
                     Comment = model.Comment,
                     Status = WorkerTaskStatus.Pending,
-                    Progress = 0
+                    Progress = 0,
+                    Created = DateTimeOffset.UtcNow,
+                    Updated = null
                 };
 
                 db.Tasks.Add(task);
@@ -101,7 +144,9 @@ namespace Demo.Web.Controllers
                     Id = task.Id,
                     Comment = task.Comment,
                     Status = (int)task.Status,
-                    Progress = task.Progress
+                    Progress = task.Progress,
+                    Created = task.Created,
+                    Updated = task.Updated
                 };
             }
         }
